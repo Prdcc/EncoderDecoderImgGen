@@ -49,24 +49,24 @@ class Decoder(nn.Module):
         )
 
         self.conv1 = nn.Sequential(
-            nn.Conv2d(6,6,kernel_size=3,padding=5),
+            nn.ConvTranspose2d(6,6,stride=3,kernel_size=3),
             activation,
-            nn.Conv2d(6,6,kernel_size=3,padding=5),
+            nn.ConvTranspose2d(6,6,stride=2,kernel_size=5,padding=1),
             activation
         )
 
         self.conv2 = nn.Sequential(
-            nn.Conv2d(6,6,kernel_size=3,padding=3),
+            nn.ConvTranspose2d(6,6,stride=1,kernel_size=5,padding=1),
             activation,
-            nn.Conv2d(6,6,kernel_size=3,padding=3),
+            nn.ConvTranspose2d(6,6,kernel_size=4,padding=1),
             activation
         )
 
         self.conv3 = nn.Sequential(
-            nn.Conv2d(6,6,kernel_size=3,padding=1),
+            nn.ConvTranspose2d(6,6,kernel_size=3,padding=1,stride=1),
             activation,
-            nn.Conv2d(6,1,kernel_size=3,padding=1),
-            nn.Tanh
+            nn.ConvTranspose2d(6,1,kernel_size=3,padding=1,stride=1),
+            nn.Tanh()
         )
 
     def forward(self, x):
@@ -75,4 +75,16 @@ class Decoder(nn.Module):
         out = self.conv1(out)
         out = self.conv2(out)
         out = self.conv3(out)
+        return out
+
+
+class EncoderDecoder(nn.Module):
+    def __init__(self, activation = nn.ReLU(), latentSize = 10):
+        super(EncoderDecoder, self).__init__()
+        self.encoder = Encoder(activation, latentSize)
+        self.decoder = Decoder(activation, latentSize)
+
+    def forward(self, x):
+        out = self.encoder(x)
+        out = self.decoder(out)
         return out
