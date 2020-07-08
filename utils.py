@@ -67,7 +67,7 @@ def plotPCA(x, y, frequency = 10):
     dfPCA = pd.DataFrame(columns = ["x","y"],data = projectedPCA)
     dfPCA["labelTrue"] = y
 
-    f, (ax1,ax2) = plt.subplots(nrows = 2,ncols = 1, sharex = False)
+    f, ax2 = plt.subplots()
 
 
     sns.scatterplot(x="x",y="y",hue="labelTrue",data=dfPCA.iloc[::frequency],palette="tab10",ax=ax2)
